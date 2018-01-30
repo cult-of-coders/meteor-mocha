@@ -1,3 +1,9 @@
+# Cult of Coders
+
+This is just practicalmeteor:mocha made to work with meteor 1.6.0 and newer versions of coffeescript.
+Cheers!
+
+
 [![Build Status](https://travis-ci.org/practicalmeteor/meteor-mocha.svg?branch=meteor)](https://travis-ci.org/practicalmeteor/meteor-mocha)
 
 ## practicalmeteor:mocha
