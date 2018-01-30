@@ -1,7 +1,7 @@
 {ObjectLogger}            = require("meteor/practicalmeteor:loglevel")
 MochaHtmlReporter         = require("./html")
-ClientServerBaseReporter  = require("./ClientServerBaseReporter")
-MochaRunner = require("../lib/MochaRunner")
+ClientServerBaseReporter  = require("./ClientServerBaseReporter").default
+MochaRunner = require("../lib/MochaRunner").default
 
 log = new ObjectLogger('HtmlReporter', 'info')
 

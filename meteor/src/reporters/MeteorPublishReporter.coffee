@@ -1,5 +1,5 @@
 {_}            = require("underscore")
-BaseReporter   = require("./BaseReporter")
+BaseReporter   = require("./BaseReporter").default
 {ObjectLogger} = require("meteor/practicalmeteor:loglevel")
 
 log = new ObjectLogger('MeteorPublishReporter', 'info')

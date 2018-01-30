@@ -1,4 +1,5 @@
-MochaRunner = require("../lib/MochaRunner")
+MochaRunner = require("../lib/MochaRunner").default
+
 #/**
 # * All other reporters generally
 # * inherit from this reporter, providing

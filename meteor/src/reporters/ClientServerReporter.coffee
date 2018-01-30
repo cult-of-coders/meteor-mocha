@@ -1,6 +1,6 @@
 {_}             = require("underscore")
-MochaRunner     = require("./../lib/MochaRunner")
-MirrorReporter  = require('./MirrorReporter')
+MochaRunner     = require("./../lib/MochaRunner").default
+MirrorReporter  = require('./MirrorReporter').default
 {ObjectLogger}  = require("meteor/practicalmeteor:loglevel")
 {EventEmitter}  = require("events")
 

@@ -1,4 +1,4 @@
-BaseReporter    = require("./BaseReporter")
+BaseReporter    = require("./BaseReporter").default
 
 class JsonStreamReporter extends BaseReporter
 

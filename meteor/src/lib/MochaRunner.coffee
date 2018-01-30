@@ -6,7 +6,7 @@ utils                 = require("mocha/lib/utils")
 {Mocha}               = require("meteor/practicalmeteor:mocha-core")
 {EventEmitter}        = require("events")
 {ObjectLogger}        = require("meteor/practicalmeteor:loglevel")
-MeteorPublishReporter = require("./../reporters/MeteorPublishReporter")
+MeteorPublishReporter = require("./../reporters/MeteorPublishReporter").default
 log = new ObjectLogger('MochaRunner', 'info')
 
 class MochaRunner extends EventEmitter
@@ -142,7 +142,7 @@ class MochaRunner extends EventEmitter
   onServerRunSubscriptionReady: =>
     try
       log.enter 'onServerRunSubscriptionReady'
-      ClientServerReporter = require("./../reporters/ClientServerReporter")
+      ClientServerReporter = require("./../reporters/ClientServerReporter").default
       { REPORTERS, reporters} = require("../reporters")
       query = utils.parseQuery(location.search || '');
 
