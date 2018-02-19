@@ -3,9 +3,9 @@ Package.describe({
   name: 'cultofcoders:mocha',
   summary:
     'Write package tests with mocha and run them in the browser or from the command line with spacejam.',
-  git: 'https://github.com/practicalmeteor/meteor-mocha.git',
+  git: 'https://github.com/cult-of-coders/meteor-mocha',
   version: '2.4.6',
-  testOnly: true
+  testOnly: true,
 });
 
 // This will remove 'Unable to resolve some modules' warnings. See https://goo.gl/YB44Km
@@ -22,7 +22,7 @@ Npm.depends({
   path: '0.12.7',
   'meteor-node-stubs': '0.2.1',
   underscore: '1.8.3',
-  mocha: '2.4.5'
+  mocha: '2.4.5',
 });
 
 Package.onUse(function(api) {
@@ -46,14 +46,14 @@ Package.onUse(function(api) {
     'practicalmeteor:mocha-core@1.0.1',
     'practicalmeteor:loglevel@1.2.0_2',
     'practicalmeteor:chai@2.1.0_1',
-    'practicalmeteor:sinon@1.14.1_2'
+    'practicalmeteor:sinon@1.14.1_2',
   ]);
 
   api.imply([
     'practicalmeteor:mocha-core@1.0.1',
     'practicalmeteor:loglevel@1.2.0_2',
     'practicalmeteor:chai@2.1.0_1',
-    'practicalmeteor:sinon@1.14.1_2'
+    'practicalmeteor:sinon@1.14.1_2',
   ]);
 
   // So meteor-web-driver will be available from the command line
@@ -76,7 +76,7 @@ Package.onTest(function(api) {
     'ecmascript',
     'practicalmeteor:chai',
     'practicalmeteor:mocha',
-    'tinytest'
+    'tinytest',
   ]);
 
   api.addFiles('meteor/tests/mocha-globals-test.coffee');
