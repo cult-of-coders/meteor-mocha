@@ -1,98 +1,127 @@
-{_}             = require("underscore")
-MochaRunner     = require("./../lib/MochaRunner").default
-MirrorReporter  = require('./MirrorReporter').default
-{ObjectLogger}  = require("meteor/practicalmeteor:loglevel")
-{EventEmitter}  = require("events")
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const {_}             = require("underscore");
+const MochaRunner     = require("./../lib/MochaRunner").default;
+const MirrorReporter  = require('./MirrorReporter').default;
+const {ObjectLogger}  = require("meteor/practicalmeteor:loglevel");
+const {EventEmitter}  = require("events");
 
-log = new ObjectLogger('ClientServerReporter', 'info')
+const log = new ObjectLogger('ClientServerReporter', 'info');
 
-class ClientServerReporter
+class ClientServerReporter {
 
 
-  constructor: (@clientRunner, @options = {})->
-    try
-      log.enter('constructor')
-      @serverRunnerProxy = new EventEmitter()
+  constructor(clientRunner, options){
+    this.runTestsSerially = this.runTestsSerially.bind(this);
+    this.clientRunner = clientRunner;
+    if (options == null) { options = {}; }
+    this.options = options;
+    try {
+      log.enter('constructor');
+      this.serverRunnerProxy = new EventEmitter();
 
-      if @options.runOrder is "serial"
-        @clientRunner = new EventEmitter()
-        @runTestsSerially(@clientRunner, @serverRunnerProxy)
+      if (this.options.runOrder === "serial") {
+        this.clientRunner = new EventEmitter();
+        this.runTestsSerially(this.clientRunner, this.serverRunnerProxy);
+      }
 
-      if not MochaRunner.reporter
-        log.info("Missing reporter to run tests. Use MochaRunner.setReporter(reporter) to set one.")
-        return
+      if (!MochaRunner.reporter) {
+        log.info("Missing reporter to run tests. Use MochaRunner.setReporter(reporter) to set one.");
+        return;
+      }
 
-      @reporter = new MochaRunner.reporter(@clientRunner, @serverRunnerProxy, @options)
+      this.reporter = new MochaRunner.reporter(this.clientRunner, this.serverRunnerProxy, this.options);
 
-      # Exposes global states of tests
-      @clientRunner.on "start", ->
-        window.mochaIsRunning = true
+      // Exposes global states of tests
+      this.clientRunner.on("start", () => window.mochaIsRunning = true);
 
-      @clientRunner.on "end", =>
-        window.mochaIsRunning = false
-        window.mochaIsDone = true
+      this.clientRunner.on("end", () => {
+        window.mochaIsRunning = false;
+        window.mochaIsDone = true;
 
-        MochaRunner.emit("end client")
-        @clientTestsEnded = true
-        if @serverTestsEnded
-          MochaRunner.emit("end all")
+        MochaRunner.emit("end client");
+        this.clientTestsEnded = true;
+        if (this.serverTestsEnded) {
+          return MochaRunner.emit("end all");
+        }
+      });
 
-      @serverRunnerProxy.on 'end', =>
-        @serverTestsEnded = true
-        MochaRunner.emit("end server")
-        if @clientTestsEnded
-          MochaRunner.emit("end all")
+      this.serverRunnerProxy.on('end', () => {
+        this.serverTestsEnded = true;
+        MochaRunner.emit("end server");
+        if (this.clientTestsEnded) {
+          return MochaRunner.emit("end all");
+        }
+      });
 
       MochaRunner.serverRunEvents.find().observe({
-        added: _.bind(@onServerRunnerEvent, @)
-      })
+        added: _.bind(this.onServerRunnerEvent, this)
+      });
 
-    finally
-      log.return()
+    } finally {
+      log.return();
+    }
+  }
 
 
-  runTestsSerially: (clientRunner, serverRunnerProxy)=>
-    try
-      log.enter("runTestsSerially",)
-      serverRunnerProxy.on "end", =>
+  runTestsSerially(clientRunner, serverRunnerProxy){
+    try {
+      log.enter("runTestsSerially");
+      return serverRunnerProxy.on("end", () => {
         mocha.reporter(MirrorReporter, {
-          clientRunner: clientRunner
-        })
-        mocha.run(->)
+          clientRunner
+        });
+        return mocha.run(function() {});
+      });
 
-    finally
-      log.return()
-
-
-  onServerRunnerEvent: (doc)->
-    try
-      log.enter('onServerRunnerEvent')
-      expect(doc).to.be.an('object')
-      expect(doc.event).to.be.a('string')
-      if doc.event is "run mocha"
-        return
-      expect(doc.data).to.be.an('object')
-
-      # Required by the standard mocha reporters
-      doc.data.fullTitle = -> return doc.data._fullTitle
-      doc.data.slow = -> return doc.data._slow
-      doc.data.err?.toString = -> "Error: " + @message
-
-      if doc.data.parent
-        doc.data.parent.fullTitle = -> return doc.data.parent._fullTitle
-        doc.data.parent.slow = -> return doc.data.parent._slow
+    } finally {
+      log.return();
+    }
+  }
 
 
-      if doc.event is 'start'
-        @serverRunnerProxy.stats = doc.data
-        @serverRunnerProxy.total = doc.data.total
+  onServerRunnerEvent(doc){
+    try {
+      log.enter('onServerRunnerEvent');
+      expect(doc).to.be.an('object');
+      expect(doc.event).to.be.a('string');
+      if (doc.event === "run mocha") {
+        return;
+      }
+      expect(doc.data).to.be.an('object');
 
-      @serverRunnerProxy.emit(doc.event, doc.data, doc.data.err)
+      // Required by the standard mocha reporters
+      doc.data.fullTitle = () => doc.data._fullTitle;
+      doc.data.slow = () => doc.data._slow;
+      if (doc.data.err != null) {
+        doc.data.err.toString = function() { return `Error: ${this.message}`; };
+      }
 
-    catch ex
-      log.error ex
-    finally
-      log.return()
+      if (doc.data.parent) {
+        doc.data.parent.fullTitle = () => doc.data.parent._fullTitle;
+        doc.data.parent.slow = () => doc.data.parent._slow;
+      }
 
 
-module.exports = ClientServerReporter
+      if (doc.event === 'start') {
+        this.serverRunnerProxy.stats = doc.data;
+        this.serverRunnerProxy.total = doc.data.total;
+      }
+
+      return this.serverRunnerProxy.emit(doc.event, doc.data, doc.data.err);
+
+    } catch (ex) {
+      return log.error(ex);
+    }
+    finally {
+      log.return();
+    }
+  }
+}
+
+
+module.exports = ClientServerReporter;
