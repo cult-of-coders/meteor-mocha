@@ -7,9 +7,9 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const MochaRunner               = require("../lib/MochaRunner");
-const { ObjectLogger }          = require("meteor/practicalmeteor:loglevel");
-const ClientServerBaseReporter  = require("./ClientServerBaseReporter");
+import MochaRunner               from "../lib/MochaRunner";
+import { ObjectLogger }          from "../lib/ObjectLogger";
+import ClientServerBaseReporter  from "./ClientServerBaseReporter";
 
 const log = new ObjectLogger('ConsoleReporter', 'info');
 
@@ -123,5 +123,5 @@ class ConsoleReporter extends  ClientServerBaseReporter {
 }
 
 
-module.exports = ConsoleReporter;
+export default ConsoleReporter;
 

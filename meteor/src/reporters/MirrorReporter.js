@@ -6,7 +6,7 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const {ObjectLogger}  = require("meteor/practicalmeteor:loglevel");
+import ObjectLogger from "../lib/ObjectLogger";
 const log = new ObjectLogger('MirrorReporter', 'info');
 
 class MirrorReporter {
@@ -15,7 +15,6 @@ class MirrorReporter {
 
     this.mochaReporter = mochaReporter;
     const clientRunner = options.reporterOptions != null ? options.reporterOptions.clientRunner : undefined;
-    expect(clientRunner, "clientRunner").to.be.ok;
 
     // The in order to calculate the progress
     clientRunner.total = this.mochaReporter.total;
@@ -96,4 +95,4 @@ class MirrorReporter {
 }
 
 
-module.exports = MirrorReporter;
+export default MirrorReporter;

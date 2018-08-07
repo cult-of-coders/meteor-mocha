@@ -6,11 +6,11 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const {_}             = require("underscore");
-const MochaRunner     = require("./../lib/MochaRunner").default;
-const MirrorReporter  = require('./MirrorReporter').default;
-const {ObjectLogger}  = require("meteor/practicalmeteor:loglevel");
-const {EventEmitter}  = require("events");
+import {_}             from "underscore";
+import MochaRunner     from "./../lib/MochaRunner";
+import MirrorReporter  from './MirrorReporter';
+import ObjectLogger  from "../lib/ObjectLogger";
+import {EventEmitter}  from "events";
 
 const log = new ObjectLogger('ClientServerReporter', 'info');
 
@@ -89,12 +89,9 @@ class ClientServerReporter {
   onServerRunnerEvent(doc){
     try {
       log.enter('onServerRunnerEvent');
-      expect(doc).to.be.an('object');
-      expect(doc.event).to.be.a('string');
       if (doc.event === "run mocha") {
         return;
       }
-      expect(doc.data).to.be.an('object');
 
       // Required by the standard mocha reporters
       doc.data.fullTitle = () => doc.data._fullTitle;
@@ -126,4 +123,4 @@ class ClientServerReporter {
 }
 
 
-module.exports = ClientServerReporter;
+export default ClientServerReporter;

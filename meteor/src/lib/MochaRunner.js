@@ -10,22 +10,23 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const {_}                   = require("underscore");
-const Test                  = require("mocha/lib/test");
-const Suite                 = require("mocha/lib/suite");
-const utils                 = require("mocha/lib/utils");
-const {Mongo}               = require("meteor/mongo");
-const {Mocha}               = require("meteor/practicalmeteor:mocha-core");
-const {EventEmitter}        = require("events");
-const {ObjectLogger}        = require("meteor/practicalmeteor:loglevel");
-const MeteorPublishReporter = require("./../reporters/MeteorPublishReporter").default;
+import {_}                   from "underscore";
+import Test                  from "mocha/lib/test";
+import Suite                 from "mocha/lib/suite";
+import utils                 from "mocha/lib/utils";
+import {Mongo}               from "meteor/mongo";
+import {Mocha}               from "meteor/practicalmeteor:mocha-core";
+import {EventEmitter}        from "events";
+import ObjectLogger        from "./ObjectLogger";
+import MeteorPublishReporter from "./../reporters/MeteorPublishReporter";
+
 const log = new ObjectLogger('MochaRunner', 'info');
 
 class MochaRunner extends EventEmitter {
   static initClass() {
-  
+
     this.instance = null;
-  
+
     this.prototype.VERSION = "2.4.5_6";
     this.prototype.serverRunEvents = null;
     this.prototype.publishers = {};
@@ -38,11 +39,12 @@ class MochaRunner extends EventEmitter {
 
   constructor() {
     {
+      super();
       // Hack: trick Babel/TypeScript into allowing this before super.
-      if (false) { super(); }
-      let thisFn = (() => { return this; }).toString();
-      let thisName = thisFn.slice(thisFn.indexOf('return') + 6 + 1, thisFn.indexOf(';')).trim();
-      eval(`${thisName} = this;`);
+      // if (false) { super(); }
+      // let thisFn = (() => { return this; }).toString();
+      // let thisName = thisFn.slice(thisFn.indexOf('return') + 6 + 1, thisFn.indexOf(';')).trim();
+      // eval(`${thisName} = this;`);
     }
     this.runServerTests = this.runServerTests.bind(this);
     this.onServerRunSubscriptionReady = this.onServerRunSubscriptionReady.bind(this);
@@ -71,7 +73,6 @@ class MochaRunner extends EventEmitter {
         try {
           log.enter('publish.mochaServerRunEvents');
           check(runId, String);
-          expect(this.ready).to.be.a('function');
           if (self.publishers[runId] == null) { self.publishers[runId] = this; }
           this.ready();
           // You can't return any other value but a Cursor, otherwise it will throw an exception
@@ -95,9 +96,6 @@ class MochaRunner extends EventEmitter {
       log.enter("runServerTests", runId);
       check(runId, String);
       check(grep, Match.Optional(Match.OneOf(null, String)));
-      expect(runId).to.be.a("string");
-      expect(this.publishers[runId], "publisher").to.be.an("object");
-      expect(Meteor.isServer).to.be.true;
       const mochaRunner = new Mocha();
       this._addTestsToMochaRunner(mocha.suite, mochaRunner.suite);
 
@@ -158,7 +156,6 @@ class MochaRunner extends EventEmitter {
   runEverywhere() {
     try {
       log.enter('runEverywhere');
-      expect(Meteor.isClient).to.be.true;
 
       this.runId = Random.id();
       return this.serverRunSubscriptionHandle = Meteor.subscribe('mochaServerRunEvents', this.runId, {
@@ -237,4 +234,4 @@ class MochaRunner extends EventEmitter {
 MochaRunner.initClass();
 
 
-module.exports = MochaRunner.get();
+export default MochaRunner.get();

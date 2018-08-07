@@ -18,12 +18,9 @@
 //*/
 
 class BaseReporter {
-
   constructor(runner, options){
     this.runner = runner;
     this.options = options;
-    expect(this.runner).to.be.an('object');
-    expect(this.options).to.be.an('object');
     this.stats = { total: this.runner.total, suites: 0, tests: 0, passes: 0, pending: 0, failures: 0 };
     this.failures = [];
 
@@ -71,4 +68,4 @@ class BaseReporter {
 }
 
 
-module.exports = BaseReporter;
+export default BaseReporter;

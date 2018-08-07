@@ -8,8 +8,8 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const MochaRunner     = require("../lib/MochaRunner");
-const ConsoleReporter     = require("./ConsoleReporter");
+import MochaRunner from "../lib/MochaRunner";
+import ConsoleReporter from "./ConsoleReporter";
 
 class XUnitReporter extends ConsoleReporter {
   static initClass() {
@@ -207,4 +207,4 @@ class XUnitReporter extends ConsoleReporter {
 XUnitReporter.initClass();
 
 
-module.exports = XUnitReporter;
+export default XUnitReporter;

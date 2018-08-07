@@ -4,8 +4,7 @@ import {meteorInstall} from "meteor/modules"
 // This must be called before require('mocha')
 // See an example from https://goo.gl/us9YVR
 
-export default ()=>{
-
+export default () => {
   process.browser = true;
   
   require("meteor-node-stubs");

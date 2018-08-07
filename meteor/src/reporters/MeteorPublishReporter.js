@@ -8,43 +8,30 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const {_}            = require("underscore");
-const BaseReporter   = require("./BaseReporter").default;
-const {ObjectLogger} = require("meteor/practicalmeteor:loglevel");
+import {_} from "underscore";
+import BaseReporter from "./BaseReporter";
+import ObjectLogger from "../lib/ObjectLogger";
 
 const log = new ObjectLogger('MeteorPublishReporter', 'info');
 
 class MeteorPublishReporter extends BaseReporter {
   static initClass() {
-  
-    this.publisher = null; 
+    this.publisher = null;
   }
 
   constructor(runner, options){
-    {
-      // Hack: trick Babel/TypeScript into allowing this before super.
-      if (false) { super(); }
-      let thisFn = (() => { return this; }).toString();
-      let thisName = thisFn.slice(thisFn.indexOf('return') + 6 + 1, thisFn.indexOf(';')).trim();
-      eval(`${thisName} = this;`);
-    }
+    super(runner, options);
+
     this.added = this.added.bind(this);
     this.errorJSON = this.errorJSON.bind(this);
+
     try {
       log.enter('constructor', arguments);
-      expect(options.reporterOptions, 'options.reporterOptions').to.be.an('object');
 
       // Update runner tests
       runner.grep(options.reporterOptions.grep);
 
-      super(runner, options);
-
-//      @publisher = practical.mocha.MeteorPublishReporter.publisher
       this.publisher = options.reporterOptions.publisher;
-      expect(this.publisher, '@publisher').to.be.an('object');
-      expect(this.publisher.ready, '@publisher.ready').to.be.a('function');
-      expect(this.publisher.added, '@publisher.added').to.be.a('function');
-      expect(this.publisher.onStop, '@publisher.onStop').to.be.a('function');
 
 
       this.publisher.onStop(() => {
@@ -62,15 +49,12 @@ class MeteorPublishReporter extends BaseReporter {
         log.info(`Can't find '${mochaReporter}' reporter. Using '${HTML_REPORTER}' instead.`);
         mochaReporter = HTML_REPORTER;
       }
-// 
-//      # Specify how to run tests 'serial' or 'parallel'
-//      # Running in 'serial' will start server tests first and then client tests
+
       this.added('run mocha', { reporter: mochaReporter,   runOrder: process.env.MOCHA_RUN_ORDER || 'parallel' });
 
       this.runner.on('start', function() {
         try {
           log.enter('onStart', arguments);
-//          @added 'start', {total: @stats.total}
           return this.added('start', this.stats);
         } finally {
           log.return();
@@ -80,8 +64,6 @@ class MeteorPublishReporter extends BaseReporter {
       this.runner.on('suite', function(suite){
         try {
           log.enter('onSuite', arguments);
-//          log.info "suite:", suite.title
-//          @added 'suite', {title: suite.title, _fullTitle: suite.fullTitle(), root: suite.root}
 
           return this.added('suite', this.cleanSuite(suite));
         } finally {
@@ -236,8 +218,8 @@ class MeteorPublishReporter extends BaseReporter {
     return _.pick(err, ["name", "message", "stack"]);
   }
 }
+
 MeteorPublishReporter.initClass();
 
 
-
-module.exports = MeteorPublishReporter;
+export default MeteorPublishReporter;

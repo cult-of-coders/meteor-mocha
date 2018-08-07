@@ -36,36 +36,35 @@ exports = module.exports = HTML;
 function HTML(runner, options) {
   Base.call(this, runner);
   options = options || {};
-  options.elementIdPrefix = options.elementIdPrefix || "";
+  options.elementIdPrefix = options.elementIdPrefix || '';
 
   /**
    * Stats template.
    */
-  var statsTemplate = '<ul id="'+options.elementIdPrefix+'mocha-stats"' +
-    ' class="mocha-stats">'
-    + '<li class="progress"><canvas width="40" height="40"></canvas></li>'
+  var statsTemplate = '<ul id="' + options.elementIdPrefix + 'mocha-stats"'
+    + ' class="mocha-stats">'
+    + '<li class="progress"><canvas width="80" height="80"></canvas></li>'
     + '<li class="passes"><a href="#">passes:</a> <em>0</em></li>'
     + '<li class="failures"><a href="#">failures:</a> <em>0</em></li>'
     + '<li class="duration">duration: <em>0</em>s</li>'
     + '</ul>';
 
-
-  var self = this
-    , stats = this.stats
-    , stat = fragment(statsTemplate)
-    , items = stat.getElementsByTagName('li')
-    , passes = items[1].getElementsByTagName('em')[0]
-    , passesLink = items[1].getElementsByTagName('a')[0]
-    , failures = items[2].getElementsByTagName('em')[0]
-    , failuresLink = items[2].getElementsByTagName('a')[0]
-    , duration = items[3].getElementsByTagName('em')[0]
-    , canvas = stat.getElementsByTagName('canvas')[0]
-    , report = fragment('<ul id="'+options.elementIdPrefix+'mocha-report"' +
-      ' class="mocha-report"></ul>')
-    , stack = [report]
-    , progress
-    , ctx
-    , root = document.getElementById(options.elementIdPrefix+'mocha');
+  var self = this,
+    stats = this.stats,
+    stat = fragment(statsTemplate),
+    items = stat.getElementsByTagName('li'),
+    passes = items[1].getElementsByTagName('em')[0],
+    passesLink = items[1].getElementsByTagName('a')[0],
+    failures = items[2].getElementsByTagName('em')[0],
+    failuresLink = items[2].getElementsByTagName('a')[0],
+    duration = items[3].getElementsByTagName('em')[0],
+    canvas = stat.getElementsByTagName('canvas')[0],
+    report = fragment('<ul id="' + options.elementIdPrefix + 'mocha-report"'
+      + ' class="mocha-report"></ul>'),
+    stack = [report],
+    progress,
+    ctx,
+    root = document.getElementById(options.elementIdPrefix + 'mocha');
 
   if (canvas.getContext) {
     var ratio = window.devicePixelRatio || 1;
@@ -79,7 +78,7 @@ function HTML(runner, options) {
   }
 
   if (!root) {
-    return error(options.elementIdPrefix+'mocha div missing, add it to your document');
+    return error(options.elementIdPrefix + 'mocha div missing, add it to your document');
   }
 
   // pass toggle
@@ -106,7 +105,7 @@ function HTML(runner, options) {
   root.appendChild(report);
 
   if (progress) {
-    progress.size(40);
+    progress.size(80);
   }
 
   runner.on('suite', function(suite) {

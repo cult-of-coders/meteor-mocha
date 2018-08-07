@@ -5,7 +5,7 @@
  * DS102: Remove unnecessary code created because of implicit returns
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const BaseReporter    = require("./BaseReporter").default;
+import BaseReporter from "./BaseReporter";
 
 class JsonStreamReporter extends BaseReporter {
 
@@ -49,4 +49,4 @@ class JsonStreamReporter extends BaseReporter {
   }
 }
 
-module.exports = JsonStreamReporter;
+export default JsonStreamReporter;

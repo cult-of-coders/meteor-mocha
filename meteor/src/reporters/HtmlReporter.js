@@ -7,28 +7,26 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const {ObjectLogger}            = require("meteor/practicalmeteor:loglevel");
-const MochaHtmlReporter         = require("./html");
-const ClientServerBaseReporter  = require("./ClientServerBaseReporter").default;
-const MochaRunner = require("../lib/MochaRunner").default;
+import ObjectLogger            from "../lib/ObjectLogger";
+import MochaHtmlReporter         from "./html";
+import ClientServerBaseReporter  from "./ClientServerBaseReporter";
+import MochaRunner from "../lib/MochaRunner";
 
 const log = new ObjectLogger('HtmlReporter', 'info');
 
 class HtmlReporter extends ClientServerBaseReporter {
 
   constructor(clientRunner, serverRunner, options){
-    {
-      // Hack: trick Babel/TypeScript into allowing this before super.
-      if (false) { super(); }
-      let thisFn = (() => { return this; }).toString();
-      let thisName = thisFn.slice(thisFn.indexOf('return') + 6 + 1, thisFn.indexOf(';')).trim();
-      eval(`${thisName} = this;`);
-    }
+    super(clientRunner, serverRunner, options);
+
     this.addReporterHtml = this.addReporterHtml.bind(this);
     this.clientRunner = clientRunner;
     this.serverRunner = serverRunner;
+
     if (options == null) { options = {}; }
+
     this.options = options;
+
     try {
       log.enter('constructor');
       this.addReporterHtml();
@@ -37,7 +35,6 @@ class HtmlReporter extends ClientServerBaseReporter {
       this.serverReporter = new MochaHtmlReporter(this.serverRunner, {
         elementIdPrefix: 'server-'
       });
-      super(this.clientRunner, this.serverRunner, this.options);
     } finally {
       log.return();
     }
@@ -80,4 +77,4 @@ class HtmlReporter extends ClientServerBaseReporter {
 
 
 
-module.exports = HtmlReporter;
+export default HtmlReporter;

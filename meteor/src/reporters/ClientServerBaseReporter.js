@@ -6,7 +6,7 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const MochaRunner = require("../lib/MochaRunner").default;
+import MochaRunner from "../lib/MochaRunner";
 
 ///**
 // * All other reporters generally
@@ -26,9 +26,6 @@ class ClientServerBaseReporter {
     this.clientRunner = clientRunner;
     this.serverRunner = serverRunner;
     this.options = options;
-    expect(this.clientRunner).to.be.an('object');
-    expect(this.serverRunner).to.be.an('object');
-    expect(this.options).to.be.an('object');
 
     this.clientStats = {total: this.clientRunner.total, suites: 0, tests: 0, passes: 0, pending: 0, failures: 0};
     this.serverStats = {total: this.serverRunner.total, suites: 0, tests: 0, passes: 0, pending: 0, failures: 0};
@@ -121,4 +118,4 @@ class ClientServerBaseReporter {
 }
 
 
-module.exports = ClientServerBaseReporter;
+export default ClientServerBaseReporter;

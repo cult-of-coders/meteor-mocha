@@ -69,6 +69,6 @@ Package.onTest(function(api) {
     'tinytest'
   ]);
 
-  api.addFiles('meteor/tests/mocha-globals-test.coffee');
-  api.addFiles('meteor/tests/mocha-import-test.coffee');
+  api.addFiles('meteor/tests/mocha-globals-test.js');
+  api.addFiles('meteor/tests/mocha-import-test.js');
 });
