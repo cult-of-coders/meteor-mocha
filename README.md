@@ -1,4 +1,4 @@
-# Hubro Education
+# decaffed
 
 Forked from cultofcoders:mocha, as it still pulled in coffeescript through external dependencies.
 This package is stripped of all coffeescript, and has some stying changes over practicalmeteor:mocha.

@@ -1,9 +1,9 @@
 // Using the "wrapper package" version format
 Package.describe({
-  name: 'hubroedu:mocha',
+  name: 'decaffed:mocha',
   summary:
     'Write package tests with mocha and run them in the browser or from the command line with spacejam.',
-  git: 'https://github.com/cult-of-coders/meteor-mocha',
+  git: 'https://github.com/hubroedu/meteor-mocha',
   version: '3.0.0',
   testOnly: true
 });
