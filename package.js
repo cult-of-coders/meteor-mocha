@@ -4,7 +4,7 @@ Package.describe({
   summary:
     'Write package tests with mocha and run them in the browser or from the command line with spacejam.',
   git: 'https://github.com/cult-of-coders/meteor-mocha',
-  version: '2.4.6',
+  version: '3.0.0',
   testOnly: true
 });
 

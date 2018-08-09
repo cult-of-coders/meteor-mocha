@@ -1,10 +1,9 @@
-# Cult of Coders
+# Hubro Education
 
-This is just practicalmeteor:mocha made to work with meteor 1.6.0 and newer versions of coffeescript.
-Cheers!
+Forked from cultofcoders:mocha, as it still pulled in coffeescript through external dependencies.
+This package is stripped of all coffeescript, and has some stying changes over practicalmeteor:mocha.
 
 
-[![Build Status](https://travis-ci.org/practicalmeteor/meteor-mocha.svg?branch=meteor)](https://travis-ci.org/practicalmeteor/meteor-mocha)
 
 ## practicalmeteor:mocha
 
