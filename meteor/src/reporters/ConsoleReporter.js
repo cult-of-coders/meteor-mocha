@@ -6,19 +6,8 @@ const log = new ObjectLogger("ConsoleReporter", "info");
 
 class ConsoleReporter extends ClientServerBaseReporter {
   constructor(clientRunner, serverRunner, options) {
-    {
-      // Hack: trick Babel/TypeScript into allowing this before super.
-      if (false) {
-        super();
-      }
-      let thisFn = (() => {
-        return this;
-      }).toString();
-      let thisName = thisFn
-        .slice(thisFn.indexOf("return") + 6 + 1, thisFn.indexOf(";"))
-        .trim();
-      eval(`${thisName} = this;`);
-    }
+    super(clientRunner, serverRunner, options);
+
     this.printReporterHeader = this.printReporterHeader.bind(this);
     this.finishAndPrintTestsSummary = this.finishAndPrintTestsSummary.bind(
       this
@@ -26,9 +15,9 @@ class ConsoleReporter extends ClientServerBaseReporter {
     this.clientRunner = clientRunner;
     this.serverRunner = serverRunner;
     this.options = options;
+
     try {
       log.enter("constructor");
-      super(this.clientRunner, this.serverRunner, this.options);
       MochaRunner.on("end all", () => this.finishAndPrintTestsSummary());
     } finally {
       log.return();

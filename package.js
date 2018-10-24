@@ -21,8 +21,7 @@ Npm.depends({
   "supports-color": "1.2.0",
   path: "0.12.7",
   "meteor-node-stubs": "0.2.1",
-  underscore: "1.8.3",
-  mocha: "2.4.5"
+  underscore: "1.8.3"
 });
 
 Package.onUse(function(api) {

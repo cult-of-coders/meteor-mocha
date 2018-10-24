@@ -3,6 +3,7 @@ import MochaRunner from "./lib/MochaRunner";
 import BaseReporter from "./reporters/BaseReporter";
 import ClientServerBaseReporter from "./reporters/ClientServerBaseReporter";
 import HtmlReporter from "./reporters/HtmlReporter";
+import ConsoleReporter from "./reporters/ConsoleReporter";
 import { hideOtherCSS, hideApp } from "meteor/tmeasday:test-reporter-helpers";
 
 export const runTests = () => {
@@ -27,7 +28,12 @@ let {
 } = global;
 
 export { MochaRunner };
-export { BaseReporter, ClientServerBaseReporter, HtmlReporter };
+export {
+  BaseReporter,
+  ClientServerBaseReporter,
+  HtmlReporter,
+  ConsoleReporter
+};
 export {
   before,
   after,

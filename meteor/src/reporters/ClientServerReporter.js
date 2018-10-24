@@ -7,10 +7,11 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { _ } from "underscore";
+import { EventEmitter } from "events";
 import MochaRunner from "./../lib/MochaRunner";
 import MirrorReporter from "./MirrorReporter";
 import ObjectLogger from "../lib/ObjectLogger";
-import { EventEmitter } from "events";
+import RunCollection from "../lib/RunCollection";
 
 const log = new ObjectLogger("ClientServerReporter", "info");
 
@@ -66,7 +67,7 @@ class ClientServerReporter {
         }
       });
 
-      MochaRunner.serverRunEvents.find().observe({
+      RunCollection.find().observe({
         added: _.bind(this.onServerRunnerEvent, this)
       });
     } finally {
