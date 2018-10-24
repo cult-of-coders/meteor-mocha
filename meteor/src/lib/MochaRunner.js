@@ -20,6 +20,8 @@ import {EventEmitter}        from "events";
 import ObjectLogger        from "./ObjectLogger";
 import MeteorPublishReporter from "./../reporters/MeteorPublishReporter";
 
+const runCollection =  new Mongo.Collection('mochaServerRunEvents');
+
 const log = new ObjectLogger('MochaRunner', 'info');
 
 class MochaRunner extends EventEmitter {
@@ -27,7 +29,7 @@ class MochaRunner extends EventEmitter {
 
     this.instance = null;
 
-    this.prototype.VERSION = "2.4.5_6";
+    this.prototype.VERSION = "3.0.0";
     this.prototype.serverRunEvents = null;
     this.prototype.publishers = {};
   }
@@ -51,7 +53,8 @@ class MochaRunner extends EventEmitter {
     try {
       log.enter('constructor');
       this.utils = utils;
-      this.serverRunEvents = new Mongo.Collection('mochaServerRunEvents');
+      this.serverRunEvents = runCollection;
+
       if (Meteor.isServer) {
         Meteor.methods({
           "mocha/runServerTests": this.runServerTests.bind(this)
