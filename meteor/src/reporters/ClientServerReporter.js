@@ -6,24 +6,24 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-import {_}             from "underscore";
-import MochaRunner     from "./../lib/MochaRunner";
-import MirrorReporter  from './MirrorReporter';
-import ObjectLogger  from "../lib/ObjectLogger";
-import {EventEmitter}  from "events";
+import { _ } from "underscore";
+import MochaRunner from "./../lib/MochaRunner";
+import MirrorReporter from "./MirrorReporter";
+import ObjectLogger from "../lib/ObjectLogger";
+import { EventEmitter } from "events";
 
-const log = new ObjectLogger('ClientServerReporter', 'info');
+const log = new ObjectLogger("ClientServerReporter", "info");
 
 class ClientServerReporter {
-
-
-  constructor(clientRunner, options){
+  constructor(clientRunner, options) {
     this.runTestsSerially = this.runTestsSerially.bind(this);
     this.clientRunner = clientRunner;
-    if (options == null) { options = {}; }
+    if (options == null) {
+      options = {};
+    }
     this.options = options;
     try {
-      log.enter('constructor');
+      log.enter("constructor");
       this.serverRunnerProxy = new EventEmitter();
 
       if (this.options.runOrder === "serial") {
@@ -32,14 +32,20 @@ class ClientServerReporter {
       }
 
       if (!MochaRunner.reporter) {
-        log.info("Missing reporter to run tests. Use MochaRunner.setReporter(reporter) to set one.");
+        log.info(
+          "Missing reporter to run tests. Use MochaRunner.setReporter(reporter) to set one."
+        );
         return;
       }
 
-      this.reporter = new MochaRunner.reporter(this.clientRunner, this.serverRunnerProxy, this.options);
+      this.reporter = new MochaRunner.reporter(
+        this.clientRunner,
+        this.serverRunnerProxy,
+        this.options
+      );
 
       // Exposes global states of tests
-      this.clientRunner.on("start", () => window.mochaIsRunning = true);
+      this.clientRunner.on("start", () => (window.mochaIsRunning = true));
 
       this.clientRunner.on("end", () => {
         window.mochaIsRunning = false;
@@ -52,7 +58,7 @@ class ClientServerReporter {
         }
       });
 
-      this.serverRunnerProxy.on('end', () => {
+      this.serverRunnerProxy.on("end", () => {
         this.serverTestsEnded = true;
         MochaRunner.emit("end server");
         if (this.clientTestsEnded) {
@@ -63,14 +69,12 @@ class ClientServerReporter {
       MochaRunner.serverRunEvents.find().observe({
         added: _.bind(this.onServerRunnerEvent, this)
       });
-
     } finally {
       log.return();
     }
   }
 
-
-  runTestsSerially(clientRunner, serverRunnerProxy){
+  runTestsSerially(clientRunner, serverRunnerProxy) {
     try {
       log.enter("runTestsSerially");
       return serverRunnerProxy.on("end", () => {
@@ -79,16 +83,14 @@ class ClientServerReporter {
         });
         return mocha.run(function() {});
       });
-
     } finally {
       log.return();
     }
   }
 
-
-  onServerRunnerEvent(doc){
+  onServerRunnerEvent(doc) {
     try {
-      log.enter('onServerRunnerEvent');
+      log.enter("onServerRunnerEvent");
       if (doc.event === "run mocha") {
         return;
       }
@@ -97,7 +99,9 @@ class ClientServerReporter {
       doc.data.fullTitle = () => doc.data._fullTitle;
       doc.data.slow = () => doc.data._slow;
       if (doc.data.err != null) {
-        doc.data.err.toString = function() { return `Error: ${this.message}`; };
+        doc.data.err.toString = function() {
+          return `Error: ${this.message}`;
+        };
       }
 
       if (doc.data.parent) {
@@ -105,22 +109,18 @@ class ClientServerReporter {
         doc.data.parent.slow = () => doc.data.parent._slow;
       }
 
-
-      if (doc.event === 'start') {
+      if (doc.event === "start") {
         this.serverRunnerProxy.stats = doc.data;
         this.serverRunnerProxy.total = doc.data.total;
       }
 
       return this.serverRunnerProxy.emit(doc.event, doc.data, doc.data.err);
-
     } catch (ex) {
       return log.error(ex);
-    }
-    finally {
+    } finally {
       log.return();
     }
   }
 }
-
 
 export default ClientServerReporter;

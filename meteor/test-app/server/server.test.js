@@ -1,4 +1,3 @@
-import addTests from "./server-test"
+import addTests from "./server-test";
 
 addTests();
-

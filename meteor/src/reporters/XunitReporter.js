@@ -13,18 +13,22 @@ import ConsoleReporter from "./ConsoleReporter";
 
 class XUnitReporter extends ConsoleReporter {
   static initClass() {
-  
     this.VERSION = "0.1.0";
     this.prototype.xUnitPrefix = "##_meteor_magic##xunit: ";
   }
 
-  constructor(clientRunner, serverRunner, options){
-
+  constructor(clientRunner, serverRunner, options) {
     {
       // Hack: trick Babel/TypeScript into allowing this before super.
-      if (false) { super(); }
-      let thisFn = (() => { return this; }).toString();
-      let thisName = thisFn.slice(thisFn.indexOf('return') + 6 + 1, thisFn.indexOf(';')).trim();
+      if (false) {
+        super();
+      }
+      let thisFn = (() => {
+        return this;
+      }).toString();
+      let thisName = thisFn
+        .slice(thisFn.indexOf("return") + 6 + 1, thisFn.indexOf(";"))
+        .trim();
       eval(`${thisName} = this;`);
     }
     this.clientRunner = clientRunner;
@@ -40,41 +44,37 @@ class XUnitReporter extends ConsoleReporter {
     super(this.clientRunner, this.serverRunner, this.options);
   }
 
-
   /*
     Overwrite from ConsoleReporter
   */
-  registerRunnerEvents(where){
-
+  registerRunnerEvents(where) {
     super.registerRunnerEvents(where);
 
-    this[where + "Runner"].on('pending', test => {
-      return this[where+"Tests"].push(test);
+    this[where + "Runner"].on("pending", test => {
+      return this[where + "Tests"].push(test);
     });
 
-    this[where + "Runner"].on('pass', test => {
-      return this[where+"Tests"].push(test);
+    this[where + "Runner"].on("pass", test => {
+      return this[where + "Tests"].push(test);
     });
 
-    return this[where + "Runner"].on('fail', test => {
-      return this[where+"Tests"].push(test);
+    return this[where + "Runner"].on("fail", test => {
+      return this[where + "Tests"].push(test);
     });
   }
 
-
   printTestSuite() {
-
     const testSuite = {
-      name: 'Mocha Tests',
+      name: "Mocha Tests",
       tests: this.stats.total,
       failures: this.stats.failures,
       errors: this.stats.failures,
-      timestamp: (new Date).toUTCString(),
-      time: (this.stats.duration/ 1000) || 0,
+      timestamp: new Date().toUTCString(),
+      time: this.stats.duration / 1000 || 0,
       skipped: this.stats.pending
     };
 
-    this.write(this.createTag('testsuite', testSuite, false));
+    this.write(this.createTag("testsuite", testSuite, false));
 
     this.clientTests.forEach(test => {
       return this.printTestCase(test, "Client");
@@ -84,9 +84,8 @@ class XUnitReporter extends ConsoleReporter {
       return this.printTestCase(test, "Server");
     });
 
-    return this.write('</testsuite>');
+    return this.write("</testsuite>");
   }
-
 
   /**
    * HTML tag helper.
@@ -98,8 +97,10 @@ class XUnitReporter extends ConsoleReporter {
    * @return {string}
    */
   createTag(name, attrs, close, content) {
-    if (attrs == null) { attrs = {}; }
-    const end = close ? '/>' : '>';
+    if (attrs == null) {
+      attrs = {};
+    }
+    const end = close ? "/>" : ">";
     const pairs = [];
     let tag = undefined;
 
@@ -109,10 +110,10 @@ class XUnitReporter extends ConsoleReporter {
       }
     }
 
-    tag = `<${name}${pairs.length ? ` ${pairs.join(' ')}` : ''}${end}`;
+    tag = `<${name}${pairs.length ? ` ${pairs.join(" ")}` : ""}${end}`;
 
     if (content) {
-      tag += content + '</' + name + end;
+      tag += content + "</" + name + end;
     }
 
     return tag;
@@ -134,8 +135,8 @@ class XUnitReporter extends ConsoleReporter {
    */
 
   done(failures, fn) {
-      return fn(failures);
-    }
+    return fn(failures);
+  }
 
   /**
    * Write out the given line.
@@ -157,20 +158,38 @@ class XUnitReporter extends ConsoleReporter {
     const attrs = {
       classname: `${where} ${test.parent.fullTitle()}`,
       name: test.title,
-      time: (test.duration / 1000) || 0
+      time: test.duration / 1000 || 0
     };
 
-    if (test.state === 'failed') {
+    if (test.state === "failed") {
       const { err } = test;
       const stack = this.escapeStack(err.stack);
-      this.write(this.createTag('testcase', attrs, false, this.createTag('failure', {}, false, this.cdata(this.escape(err.message) + '\n' + stack))));
+      this.write(
+        this.createTag(
+          "testcase",
+          attrs,
+          false,
+          this.createTag(
+            "failure",
+            {},
+            false,
+            this.cdata(this.escape(err.message) + "\n" + stack)
+          )
+        )
+      );
     } else if (test.pending) {
-      this.write(this.createTag('testcase', attrs, false, this.createTag('skipped', {}, true)));
+      this.write(
+        this.createTag(
+          "testcase",
+          attrs,
+          false,
+          this.createTag("skipped", {}, true)
+        )
+      );
     } else {
-      this.write(this.createTag('testcase', attrs, true));
+      this.write(this.createTag("testcase", attrs, true));
     }
   }
-
 
   /**
    * Escape special characters in the given string of html.
@@ -182,12 +201,11 @@ class XUnitReporter extends ConsoleReporter {
 
   escape(html) {
     return String(html)
-      .replace(/&/g, '&amp;')
-      .replace(/"/g, '&quot;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
   }
-
 
   /**
    * For each line add the @xUnitPrefix and escape special characters in the given string of html.
@@ -196,15 +214,16 @@ class XUnitReporter extends ConsoleReporter {
    * @param  {string} stack
    * @return {string}
    */
-  escapeStack(stack){
-
-    if (stack == null) { stack = ""; }
-    return stack.split("\n")
-      .map( s => this.xUnitPrefix + this.escape(s))
+  escapeStack(stack) {
+    if (stack == null) {
+      stack = "";
+    }
+    return stack
+      .split("\n")
+      .map(s => this.xUnitPrefix + this.escape(s))
       .join("\n");
   }
 }
 XUnitReporter.initClass();
-
 
 export default XUnitReporter;

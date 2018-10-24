@@ -7,4 +7,4 @@ else
 fi
 
 # Making sure correct version of meteor is downloaded
-meteor --release 1.3.3.1 --version
+meteor --release 1.8 --version

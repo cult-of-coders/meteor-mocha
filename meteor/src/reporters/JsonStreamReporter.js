@@ -8,26 +8,27 @@
 import BaseReporter from "./BaseReporter";
 
 class JsonStreamReporter extends BaseReporter {
-
-  constructor(runner, options){
+  constructor(runner, options) {
     super(runner, options);
 
-    this.runner.on('start', total=> {
-      return console.log(JSON.stringify(['start', { total: this.stats.total }]));
+    this.runner.on("start", total => {
+      return console.log(
+        JSON.stringify(["start", { total: this.stats.total }])
+      );
     });
 
-    this.runner.on('pass', test=> {
-      return console.log(JSON.stringify(['pass', this.clean(test)]));
+    this.runner.on("pass", test => {
+      return console.log(JSON.stringify(["pass", this.clean(test)]));
     });
 
-    this.runner.on('fail', (test, err)=> {
+    this.runner.on("fail", (test, err) => {
       test = this.clean(test);
       test.err = err.message;
-      return console.log(JSON.stringify(['fail', test]));
+      return console.log(JSON.stringify(["fail", test]));
     });
 
-    this.runner.on('end', () => {
-      return console.log(JSON.stringify(['end', this.stats]));
+    this.runner.on("end", () => {
+      return console.log(JSON.stringify(["end", this.stats]));
     });
   }
 
@@ -40,7 +41,7 @@ class JsonStreamReporter extends BaseReporter {
   // * @api private
   // */
 
-  clean(test){
+  clean(test) {
     return {
       title: test.title,
       fullTitle: test.fullTitle(),

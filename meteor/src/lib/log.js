@@ -1,1 +1,1 @@
-log = loglevel.createPackageLogger('practicalmeteor:mocha', 'debug');
+log = loglevel.createPackageLogger("practicalmeteor:mocha", "debug");

@@ -7,33 +7,34 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-import ObjectLogger            from "../lib/ObjectLogger";
-import MochaHtmlReporter         from "./html";
-import ClientServerBaseReporter  from "./ClientServerBaseReporter";
+import ObjectLogger from "../lib/ObjectLogger";
+import MochaHtmlReporter from "./html";
+import ClientServerBaseReporter from "./ClientServerBaseReporter";
 import MochaRunner from "../lib/MochaRunner";
 
-const log = new ObjectLogger('HtmlReporter', 'info');
+const log = new ObjectLogger("HtmlReporter", "info");
 
 class HtmlReporter extends ClientServerBaseReporter {
-
-  constructor(clientRunner, serverRunner, options){
+  constructor(clientRunner, serverRunner, options) {
     super(clientRunner, serverRunner, options);
 
     this.addReporterHtml = this.addReporterHtml.bind(this);
     this.clientRunner = clientRunner;
     this.serverRunner = serverRunner;
 
-    if (options == null) { options = {}; }
+    if (options == null) {
+      options = {};
+    }
 
     this.options = options;
 
     try {
-      log.enter('constructor');
+      log.enter("constructor");
       this.addReporterHtml();
 
       this.reporter = new MochaHtmlReporter(this.clientRunner);
       this.serverReporter = new MochaHtmlReporter(this.serverRunner, {
-        elementIdPrefix: 'server-'
+        elementIdPrefix: "server-"
       });
     } finally {
       log.return();
@@ -46,11 +47,11 @@ class HtmlReporter extends ClientServerBaseReporter {
     at the same time, one for client tests and one for server tests.
     TODO: Create a single meteor reactive reporter.
   */
-  addReporterHtml(){
+  addReporterHtml() {
     try {
       log.enter("addReporterHtml");
-      const div = document.createElement('div');
-      div.className = 'mocha-wrapper';
+      const div = document.createElement("div");
+      div.className = "mocha-wrapper";
 
       div.innerHTML = `<div class="content"> \
 <div class="test-wrapper"> \
@@ -74,7 +75,5 @@ class HtmlReporter extends ClientServerBaseReporter {
     }
   }
 }
-
-
 
 export default HtmlReporter;

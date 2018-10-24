@@ -1,4 +1,4 @@
-import {expect} from "meteor/practicalmeteor:chai"
-import addTests from "./globals-test"
+import { expect } from "meteor/practicalmeteor:chai";
+import addTests from "./globals-test";
 
 addTests("Full app");

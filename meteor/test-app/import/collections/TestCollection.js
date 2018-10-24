@@ -1,3 +1,3 @@
-import {Mongo} from "meteor/mongo";
+import { Mongo } from "meteor/mongo";
 
-export default TestCollection = new Mongo.Collection("TestCollection");
+export default (TestCollection = new Mongo.Collection("TestCollection"));
