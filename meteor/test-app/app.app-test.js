@@ -1,3 +1,3 @@
-import addTests from "./both-test"
+import addTests from "./both-test";
 
 addTests("Full app: ");

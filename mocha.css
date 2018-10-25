@@ -2,10 +2,11 @@
 
 body {
   margin:0;
+  font-family: monospace, sans-serif;
 }
 
 .mocha {
-  font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 20px/1.5 monospace, Helvetica, Arial, sans-serif;
   margin: 60px 50px;
 }
 
@@ -65,7 +66,7 @@ body {
 
 .mocha .test.pending:hover h2::after {
   content: '(pending)';
-  font-family: arial, sans-serif;
+  font-family: monospace, sans-serif;
 }
 
 .mocha .test.pass.medium .duration {
@@ -114,7 +115,7 @@ body {
 }
 
 .mocha .test.fail {
-  color: #c00;
+  color: red;
 }
 
 .mocha .test.fail pre {
@@ -127,11 +128,11 @@ body {
   display: block;
   float: left;
   margin-right: 5px;
-  color: #c00;
+  color: red;
 }
 
 .mocha .test pre.error {
-  color: #c00;
+  color: red;
   max-height: 300px;
   overflow: auto;
 }
@@ -242,7 +243,7 @@ body {
 }
 
 .mocha-error {
-  color: #c00;
+  color: red;
   font-size: 1.5em;
   font-weight: 100;
   letter-spacing: 1px;
@@ -254,7 +255,7 @@ body {
   right: 10px;
   font-size: 12px;
   margin: 0;
-  color: #888;
+  color: #ddd;
   z-index: 1;
 }
 
@@ -273,7 +274,7 @@ body {
 }
 
 .mocha-stats em {
-  color: black;
+  color: white;
 }
 
 .mocha-stats a {
@@ -287,14 +288,15 @@ body {
 
 .mocha-stats li {
   display: inline-block;
-  margin: 0 5px;
+  margin: 0 10px;
   list-style: none;
-  padding-top: 11px;
+  padding-top: 0;
+  vertical-align: middle;
 }
 
 .mocha-stats canvas {
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 80px;
 }
 
 .mocha code .comment { color: #ddd; }
@@ -328,6 +330,9 @@ body {
 }
 .mocha-wrapper {
   text-align: center;
+  background: #111;
+  min-height: 100vh;
+  color: lawngreen;
   /* background: beige; */
   padding: 0;
   font-size: 0;

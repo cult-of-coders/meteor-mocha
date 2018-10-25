@@ -4,32 +4,16 @@ Package.describe({
   summary: "Test package for the mocha package"
 });
 
+Package.onUse(function(api) {
+  api.versionsFrom("1.3");
 
-Package.onUse(function (api) {
-  api.versionsFrom('1.3');
-
-  api.use([
-    'meteor',
-    'mongo',
-    'coffeescript',
-    'practicalmeteor:loglevel',
-    'practicalmeteor:chai',
-    "ecmascript"
-  ]);
-
+  api.use(["meteor", "mongo", "ecmascript"]);
 });
 
-Package.onTest(function (api) {
-  api.use([
-    'coffeescript',
-    'practicalmeteor:loglevel',
-    'practicalmeteor:chai',
-    'practicalmeteor:mocha@=2.4.5_6',
-    'ecmascript',
-    'test-package'
-  ]);
+Package.onTest(function(api) {
+  api.use(["hubroedu:mocha@=3.0.0", "ecmascript", "test-package"]);
 
-  api.addFiles('mocha-tests.js');
-  api.addFiles('server-tests.js', 'server');
-  api.addFiles('mocha-globals-tests.js');
+  api.addFiles("mocha-tests.js");
+  api.addFiles("server-tests.js", "server");
+  api.addFiles("mocha-globals-tests.js");
 });

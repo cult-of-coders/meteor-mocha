@@ -1,3 +1,10 @@
+3.0.0 / 2018-08-09
+==================
+
+* Stripped out Coffeescript everywhere
+* Removed several atmosphere deps and added npm deps instead
+* Published as hubroedu:mocha
+
 2.4.5 / 2016-01-28
 ==================
 

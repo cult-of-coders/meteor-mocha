@@ -3,10 +3,10 @@
 /**
  * Module dependencies.
  */
-var Base = require('../../../lib/reporters/base');
-var utils = require('../../../lib/utils');
-var Progress = require('../../../lib/browser/progress');
-var escapeRe = require('escape-string-regexp');
+var Base = require("../../../lib/reporters/base");
+var utils = require("../../../lib/utils");
+var Progress = require("../../../lib/browser/progress");
+var escapeRe = require("escape-string-regexp");
 var escape = utils.escape;
 /**
  * Save timer references to avoid Sinon interfering (see GH-237).
@@ -41,31 +41,37 @@ function HTML(runner, options) {
   /**
    * Stats template.
    */
-  var statsTemplate = '<ul id="'+options.elementIdPrefix+'mocha-stats"' +
-    ' class="mocha-stats">'
-    + '<li class="progress"><canvas width="40" height="40"></canvas></li>'
-    + '<li class="passes"><a href="#">passes:</a> <em>0</em></li>'
-    + '<li class="failures"><a href="#">failures:</a> <em>0</em></li>'
-    + '<li class="duration">duration: <em>0</em>s</li>'
-    + '</ul>';
+  var statsTemplate =
+    '<ul id="' +
+    options.elementIdPrefix +
+    'mocha-stats"' +
+    ' class="mocha-stats">' +
+    '<li class="progress"><canvas width="80" height="80"></canvas></li>' +
+    '<li class="passes"><a href="#">passes:</a> <em>0</em></li>' +
+    '<li class="failures"><a href="#">failures:</a> <em>0</em></li>' +
+    '<li class="duration">duration: <em>0</em>s</li>' +
+    "</ul>";
 
-
-  var self = this
-    , stats = this.stats
-    , stat = fragment(statsTemplate)
-    , items = stat.getElementsByTagName('li')
-    , passes = items[1].getElementsByTagName('em')[0]
-    , passesLink = items[1].getElementsByTagName('a')[0]
-    , failures = items[2].getElementsByTagName('em')[0]
-    , failuresLink = items[2].getElementsByTagName('a')[0]
-    , duration = items[3].getElementsByTagName('em')[0]
-    , canvas = stat.getElementsByTagName('canvas')[0]
-    , report = fragment('<ul id="'+options.elementIdPrefix+'mocha-report"' +
-      ' class="mocha-report"></ul>')
-    , stack = [report]
-    , progress
-    , ctx
-    , root = document.getElementById(options.elementIdPrefix+'mocha');
+  var self = this,
+    stats = this.stats,
+    stat = fragment(statsTemplate),
+    items = stat.getElementsByTagName("li"),
+    passes = items[1].getElementsByTagName("em")[0],
+    passesLink = items[1].getElementsByTagName("a")[0],
+    failures = items[2].getElementsByTagName("em")[0],
+    failuresLink = items[2].getElementsByTagName("a")[0],
+    duration = items[3].getElementsByTagName("em")[0],
+    canvas = stat.getElementsByTagName("canvas")[0],
+    report = fragment(
+      '<ul id="' +
+        options.elementIdPrefix +
+        'mocha-report"' +
+        ' class="mocha-report"></ul>'
+    ),
+    stack = [report],
+    progress,
+    ctx,
+    root = document.getElementById(options.elementIdPrefix + "mocha");
 
   if (canvas.getContext) {
     var ratio = window.devicePixelRatio || 1;
@@ -73,32 +79,34 @@ function HTML(runner, options) {
     canvas.style.height = canvas.height;
     canvas.width *= ratio;
     canvas.height *= ratio;
-    ctx = canvas.getContext('2d');
+    ctx = canvas.getContext("2d");
     ctx.scale(ratio, ratio);
     progress = new Progress();
   }
 
   if (!root) {
-    return error(options.elementIdPrefix+'mocha div missing, add it to your document');
+    return error(
+      options.elementIdPrefix + "mocha div missing, add it to your document"
+    );
   }
 
   // pass toggle
-  on(passesLink, 'click', function() {
+  on(passesLink, "click", function() {
     unhide();
-    var name = (/pass/).test(report.className) ? '' : ' pass';
-    report.className = report.className.replace(/fail|pass/g, '') + name;
+    var name = /pass/.test(report.className) ? "" : " pass";
+    report.className = report.className.replace(/fail|pass/g, "") + name;
     if (report.className.trim()) {
-      hideSuitesWithout('test pass');
+      hideSuitesWithout("test pass");
     }
   });
 
   // failure toggle
-  on(failuresLink, 'click', function() {
+  on(failuresLink, "click", function() {
     unhide();
-    var name = (/fail/).test(report.className) ? '' : ' fail';
-    report.className = report.className.replace(/fail|pass/g, '') + name;
+    var name = /fail/.test(report.className) ? "" : " fail";
+    report.className = report.className.replace(/fail|pass/g, "") + name;
     if (report.className.trim()) {
-      hideSuitesWithout('test fail');
+      hideSuitesWithout("test fail");
     }
   });
 
@@ -106,43 +114,47 @@ function HTML(runner, options) {
   root.appendChild(report);
 
   if (progress) {
-    progress.size(40);
+    progress.size(80);
   }
 
-  runner.on('suite', function(suite) {
+  runner.on("suite", function(suite) {
     if (suite.root) {
       return;
     }
 
     // suite
     var url = self.suiteURL(suite);
-    var el = fragment('<li class="suite"><h1><a href="%s">%s</a></h1></li>', url, escape(suite.title));
+    var el = fragment(
+      '<li class="suite"><h1><a href="%s">%s</a></h1></li>',
+      url,
+      escape(suite.title)
+    );
 
     // container
     stack[0].appendChild(el);
-    stack.unshift(document.createElement('ul'));
+    stack.unshift(document.createElement("ul"));
     el.appendChild(stack[0]);
   });
 
-  runner.on('suite end', function(suite) {
+  runner.on("suite end", function(suite) {
     if (suite.root) {
       return;
     }
     stack.shift();
   });
 
-  runner.on('fail', function(test) {
+  runner.on("fail", function(test) {
     test.body = test.body || test.fn.toString();
     // For type = 'test' its possible that the test failed due to multiple
     // done() calls. So report the issue here.
-    if (test.type === 'hook') {
-      runner.emit('test end', test);
+    if (test.type === "hook") {
+      runner.emit("test end", test);
     }
   });
 
-  runner.on('test end', function(test) {
+  runner.on("test end", function(test) {
     // TODO: add to stats
-    var percent = stats.tests / this.total * 100 | 0;
+    var percent = ((stats.tests / this.total) * 100) | 0;
     if (progress) {
       progress.update(percent).draw(ctx);
     }
@@ -155,19 +167,32 @@ function HTML(runner, options) {
 
     // test
     var el;
-    if (test.state === 'passed') {
+    if (test.state === "passed") {
       var url = self.testURL(test);
-      el = fragment('<li class="test pass %e"><h2>%e<span class="duration">%ems</span> <a href="%s" class="replay">‣</a></h2></li>', test.speed, test.title, test.duration, url);
+      el = fragment(
+        '<li class="test pass %e"><h2>%e<span class="duration">%ems</span> <a href="%s" class="replay">‣</a></h2></li>',
+        test.speed,
+        test.title,
+        test.duration,
+        url
+      );
     } else if (test.pending) {
-      el = fragment('<li class="test pass pending"><h2>%e</h2></li>', test.title);
+      el = fragment(
+        '<li class="test pass pending"><h2>%e</h2></li>',
+        test.title
+      );
     } else {
-      el = fragment('<li class="test fail"><h2>%e <a href="%e" class="replay">‣</a></h2></li>', test.title, self.testURL(test));
+      el = fragment(
+        '<li class="test fail"><h2>%e <a href="%e" class="replay">‣</a></h2></li>',
+        test.title,
+        self.testURL(test)
+      );
       var stackString; // Note: Includes leading newline
       var message = test.err.toString();
 
       // <=IE7 stringifies to [Object Error]. Since it can be overloaded, we
       // check for the result of the stringifying.
-      if (message === '[object Error]') {
+      if (message === "[object Error]") {
         message = test.err.message;
       }
 
@@ -176,36 +201,48 @@ function HTML(runner, options) {
         if (indexOfMessage === -1) {
           stackString = test.err.stack;
         } else {
-          stackString = test.err.stack.substr(test.err.message.length + indexOfMessage);
+          stackString = test.err.stack.substr(
+            test.err.message.length + indexOfMessage
+          );
         }
       } else if (test.err.sourceURL && test.err.line !== undefined) {
         // Safari doesn't give you a stack. Let's at least provide a source line.
-        stackString = '\n(' + test.err.sourceURL + ':' + test.err.line + ')';
+        stackString = "\n(" + test.err.sourceURL + ":" + test.err.line + ")";
       }
 
-      stackString = stackString || '';
+      stackString = stackString || "";
 
       if (test.err.htmlMessage && stackString) {
-        el.appendChild(fragment('<div class="html-error">%s\n<pre class="error">%e</pre></div>', test.err.htmlMessage, stackString));
+        el.appendChild(
+          fragment(
+            '<div class="html-error">%s\n<pre class="error">%e</pre></div>',
+            test.err.htmlMessage,
+            stackString
+          )
+        );
       } else if (test.err.htmlMessage) {
-        el.appendChild(fragment('<div class="html-error">%s</div>', test.err.htmlMessage));
+        el.appendChild(
+          fragment('<div class="html-error">%s</div>', test.err.htmlMessage)
+        );
       } else {
-        el.appendChild(fragment('<pre class="error">%e%e</pre>', message, stackString));
+        el.appendChild(
+          fragment('<pre class="error">%e%e</pre>', message, stackString)
+        );
       }
     }
 
     // toggle code
     // TODO: defer
     if (!test.pending) {
-      var h2 = el.getElementsByTagName('h2')[0];
+      var h2 = el.getElementsByTagName("h2")[0];
 
-      on(h2, 'click', function() {
-        pre.style.display = pre.style.display === 'none' ? 'block' : 'none';
+      on(h2, "click", function() {
+        pre.style.display = pre.style.display === "none" ? "block" : "none";
       });
 
-      var pre = fragment('<pre><code>%e</code></pre>', utils.clean(test.body));
+      var pre = fragment("<pre><code>%e</code></pre>", utils.clean(test.body));
       el.appendChild(pre);
-      pre.style.display = 'none';
+      pre.style.display = "none";
     }
 
     // Don't call .appendChild if #mocha-report was already .shift()'ed off the stack.
@@ -226,10 +263,15 @@ function makeUrl(s) {
 
   // Remove previous grep query parameter if present
   if (search) {
-    search = search.replace(/[?&]grep=[^&\s]*/g, '').replace(/^&/, '?');
+    search = search.replace(/[?&]grep=[^&\s]*/g, "").replace(/^&/, "?");
   }
 
-  return window.location.pathname + (search ? search + '&' : '?') + 'grep=' + encodeURIComponent(escapeRe(s));
+  return (
+    window.location.pathname +
+    (search ? search + "&" : "?") +
+    "grep=" +
+    encodeURIComponent(escapeRe(s))
+  );
 }
 
 /**
@@ -266,13 +308,15 @@ function error(msg) {
  */
 function fragment(html) {
   var args = arguments;
-  var div = document.createElement('div');
+  var div = document.createElement("div");
   var i = 1;
 
   div.innerHTML = html.replace(/%([se])/g, function(_, type) {
     switch (type) {
-      case 's': return String(args[i++]);
-      case 'e': return escape(args[i++]);
+      case "s":
+        return String(args[i++]);
+      case "e":
+        return escape(args[i++]);
       // no default
     }
   });
@@ -287,11 +331,11 @@ function fragment(html) {
  * @param {text} classname
  */
 function hideSuitesWithout(classname) {
-  var suites = document.getElementsByClassName('suite');
+  var suites = document.getElementsByClassName("suite");
   for (var i = 0; i < suites.length; i++) {
     var els = suites[i].getElementsByClassName(classname);
     if (!els.length) {
-      suites[i].className += ' hidden';
+      suites[i].className += " hidden";
     }
   }
 }
@@ -300,9 +344,9 @@ function hideSuitesWithout(classname) {
  * Unhide .hidden suites.
  */
 function unhide() {
-  var els = document.getElementsByClassName('suite hidden');
+  var els = document.getElementsByClassName("suite hidden");
   for (var i = 0; i < els.length; ++i) {
-    els[i].className = els[i].className.replace('suite hidden', 'suite');
+    els[i].className = els[i].className.replace("suite hidden", "suite");
   }
 }
 
@@ -327,6 +371,6 @@ function on(el, event, fn) {
   if (el.addEventListener) {
     el.addEventListener(event, fn, false);
   } else {
-    el.attachEvent('on' + event, fn);
+    el.attachEvent("on" + event, fn);
   }
 }

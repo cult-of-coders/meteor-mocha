@@ -1,36 +1,38 @@
 var page, system;
 
-page = require('webpage').create();
-var fs = require('fs');
-system = require('system');
+page = require("webpage").create();
+var fs = require("fs");
+system = require("system");
 console.log("phantomjs: Using file " + system.env.TEST_FILE + " to compare.");
 var compare = fs.read(system.env.TEST_FILE);
 console.log("phantomjs: Running tests at " + system.env.ROOT_URL);
 
-page.onConsoleMessage = function (message) {
+page.onConsoleMessage = function(message) {
   console.log(message);
 };
 
-page.open(system.env.ROOT_URL, function(status) {console.log("status:", status)});
+page.open(system.env.ROOT_URL, function(status) {
+  console.log("status:", status);
+});
 
-page.onError = function (msg, trace) {
+page.onError = function(msg, trace) {
   var mochaIsRunning;
-  mochaIsRunning = page.evaluate(function () {
+  mochaIsRunning = page.evaluate(function() {
     return window.mochaIsRunning;
   });
   if (mochaIsRunning) {
     return;
   }
   console.log("phantomjs: " + msg);
-  trace.forEach(function (item) {
+  trace.forEach(function(item) {
     console.log("    " + item.file + ": " + item.line);
   });
   phantom.exit(6);
 };
 
-setInterval(function () {
+setInterval(function() {
   var done, failures;
-  done = page.evaluate(function () {
+  done = page.evaluate(function() {
     if (typeof TEST_STATUS !== "undefined" && TEST_STATUS !== null) {
       return TEST_STATUS.DONE;
     }
@@ -40,10 +42,10 @@ setInterval(function () {
     return false;
   });
   if (done) {
-    var html = page.evaluate(function () {
+    var html = page.evaluate(function() {
       // We don't care about the duration of tests. We make them '0'
       var duration = document.querySelectorAll(".duration");
-      for(var i = 0; i < duration.length; i++){
+      for (var i = 0; i < duration.length; i++) {
         duration[i].innerHTML = "0";
       }
       // Cleanup slow fast medium classes
@@ -54,9 +56,9 @@ setInterval(function () {
         test.classList.remove("medium");
         test.classList.remove("slow");
 
-        test.classList.add("fast")
+        test.classList.add("fast");
       }
- 
+
       return document.querySelector(".mocha-wrapper").innerHTML;
     });
     // Remove changing strings
@@ -69,21 +71,20 @@ setInterval(function () {
     regex = new RegExp("hash=[^\\n|^<]*", "g");
     html = html.replace(regex, "hash=a");
 
-    regex = new RegExp("meteor-test-[^\/]*", "g");
+    regex = new RegExp("meteor-test-[^/]*", "g");
     html = html.replace(regex, "meteor-test-123");
 
-    regex = new RegExp("meteor-test-[^\/]*", "g");
+    regex = new RegExp("meteor-test-[^/]*", "g");
     html = html.replace(regex, "meteor-test-123");
 
-    regex = /\/home\/.*\/.meteor\/.*\)/g
+    regex = /\/home\/.*\/.meteor\/.*\)/g;
     html = html.replace(regex, "/home/test/.meteor/promise/core.js:1:1)");
 
-
-    var equal = (compare == html);
-    if (!equal){
-      fs.write(system.env.TEST_FILE+".compare", html, 'w');
+    var equal = compare == html;
+    if (!equal) {
+      fs.write(system.env.TEST_FILE + ".compare", html, "w");
     }
-    return phantom.exit( !equal);
+    return phantom.exit(!equal);
   }
 }, 500);
 

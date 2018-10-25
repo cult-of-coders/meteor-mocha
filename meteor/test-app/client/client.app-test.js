@@ -1,3 +1,3 @@
-import addTests from "./client-test"
+import addTests from "./client-test";
 
 addTests("Full app: ");

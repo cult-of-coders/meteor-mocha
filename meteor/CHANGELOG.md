@@ -1,3 +1,8 @@
+# 3.0.0
+
+- Removed all coffeescript
+- Redesigned the html reporter
+
 # 2.4.5_6
 
 - Add `ConsoleReporter` and `XunitReporter` more details in how to run then [HERE]().
